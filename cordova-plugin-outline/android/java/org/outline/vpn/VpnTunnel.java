@@ -23,10 +23,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tun2socks.OutlineTunnel;
 import tun2socks.Tun2socks;
+import tun2xray.Tun2xray;
 
 /**
  * Manages the life-cycle of the system VPN, and of the tunnel that processes its traffic.
@@ -46,6 +48,7 @@ public class VpnTunnel {
   private String dnsResolverAddress;
   private ParcelFileDescriptor tunFd;
   private OutlineTunnel tunnel;
+  private String userId = UUID.randomUUID().toString();;
 
   /**
    * Constructor.
@@ -115,6 +118,22 @@ public class VpnTunnel {
     } finally {
       tunFd = null;
     }
+  }
+
+  public synchronized void connectTunnel(final String serverAddress, int serverPort) throws Exception {
+    LOG.info("Connecting the tunnel.")
+    if (serverAddress == null || port <= 0 || port > 65535) {
+      throw new IllegalArgumentException("Must provide valid xray proxy parameters.");
+    }
+    if (tunFd == null) {
+      throw new IllegalStateException("Must establish the VPN before connecting the tunnel.");
+    }
+    if (isTunnelConnected()) {
+      throw new IllegalStateException("Tunnel already connected");
+    }
+
+    LOG.fine("Starting tun2xray...");
+    tunnel = Tun2xray.ConnectXrayTunnel(tunFd.getFd(), "param", "", serverAddress, serverPort, userId);
   }
 
   /**
@@ -215,4 +234,9 @@ public class VpnTunnel {
       return new Subnet(components[0], Integer.parseInt(components[1]));
     }
   }
+
+  private String getUUID() {
+
+  }
 }
+

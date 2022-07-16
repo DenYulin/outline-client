@@ -41,6 +41,8 @@ import org.outline.TunnelConfig;
 import org.outline.log.SentryErrorReporter;
 import org.outline.shadowsocks.ShadowsocksConfig;
 import shadowsocks.Shadowsocks;
+import org.outline.xray.XRayConfig;
+import tun2xray.Tun2xray;
 
 /**
  * Android service responsible for managing a VPN tunnel. Clients must bind to this
@@ -167,6 +169,14 @@ public class VpnTunnelService extends VpnService {
     tunnelConfig.proxy.port = config.getInt("port");
     tunnelConfig.proxy.password = config.getString("password");
     tunnelConfig.proxy.method = config.getString("method");
+
+    tunnelConfig.xray = new XRayConfig();
+    tunnelConfig.xray.configType = config.getString("configType");
+    tunnelConfig.xray.jsonConfig = config.getString("jsonConfig");
+    tunnelConfig.xray.serverAddress = config.getString("serverAddress");
+    tunnelConfig.xray.serverPort = config.getString("serverPort");
+    tunnelConfig.xray.userId = config.getString("userId");
+
     try {
       // `name` is an optional property; don't throw if it fails to parse.
       tunnelConfig.name = config.getString("name");
@@ -185,7 +195,7 @@ public class VpnTunnelService extends VpnService {
   private synchronized OutlinePlugin.ErrorCode startTunnel(
       final TunnelConfig config, boolean isAutoStart) {
     LOG.info(String.format(Locale.ROOT, "Starting tunnel %s.", config.id));
-    if (config.id == null || config.proxy == null) {
+    if (config.id == null || config.proxy == null || config.xray) {
       return OutlinePlugin.ErrorCode.ILLEGAL_SERVER_CONFIGURATION;
     }
     final boolean isRestart = tunnelConfig != null;
@@ -201,23 +211,39 @@ public class VpnTunnelService extends VpnService {
       }
     }
 
-    final ShadowsocksConfig proxyConfig = config.proxy;
-    OutlinePlugin.ErrorCode errorCode = OutlinePlugin.ErrorCode.NO_ERROR;
+    final XrayConfig xrayConfig = config.xray;
+    OutlinePlugin.ErrorCode errorCodeX = OutlinePlugin.ErrorCode.NO_ERROR;
     if (!isAutoStart) {
       try {
-        // Do not perform connectivity checks when connecting on startup. We should avoid failing
-        // the connection due to a network error, as network may not be ready.
-        errorCode = checkServerConnectivity(proxyConfig);
-        if (!(errorCode == OutlinePlugin.ErrorCode.NO_ERROR
-                || errorCode == OutlinePlugin.ErrorCode.UDP_RELAY_NOT_ENABLED)) {
+        errorCodeX = checkServerConnectivity(xrayConfig);
+        if (!(errorCode == OutlinePlugin.ErrorCode.NO_ERROR || errorCode == OutlinePlugin.ErrorCode.UDP_RELAY_NOT_ENABLED)) {
           tearDownActiveTunnel();
           return errorCode;
         }
       } catch (Exception e) {
         tearDownActiveTunnel();
-        return OutlinePlugin.ErrorCode.SHADOWSOCKS_START_FAILURE;
+        return OutlinePlugin.ErrorCode.XRAY_START_FAILURE;
       }
     }
+
+
+//    final ShadowsocksConfig proxyConfig = config.proxy;
+//    OutlinePlugin.ErrorCode errorCode = OutlinePlugin.ErrorCode.NO_ERROR;
+//    if (!isAutoStart) {
+//      try {
+//        // Do not perform connectivity checks when connecting on startup. We should avoid failing
+//        // the connection due to a network error, as network may not be ready.
+//        errorCode = checkServerConnectivity(proxyConfig);
+//        if (!(errorCode == OutlinePlugin.ErrorCode.NO_ERROR
+//                || errorCode == OutlinePlugin.ErrorCode.UDP_RELAY_NOT_ENABLED)) {
+//          tearDownActiveTunnel();
+//          return errorCode;
+//        }
+//      } catch (Exception e) {
+//        tearDownActiveTunnel();
+//        return OutlinePlugin.ErrorCode.SHADOWSOCKS_START_FAILURE;
+//      }
+//    }
     tunnelConfig = config;
 
     if (!isRestart) {
@@ -232,9 +258,9 @@ public class VpnTunnelService extends VpnService {
 
     final boolean remoteUdpForwardingEnabled =
         isAutoStart ? tunnelStore.isUdpSupported() : errorCode == OutlinePlugin.ErrorCode.NO_ERROR;
+
     try {
-      vpnTunnel.connectTunnel(proxyConfig.host, proxyConfig.port, proxyConfig.password,
-          proxyConfig.method, remoteUdpForwardingEnabled);
+      vpnTunnel.connectTunnel(xrayConfig.serverAddress, xrayConfig.serverPort)
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "Failed to connect the tunnel", e);
       tearDownActiveTunnel();
@@ -243,6 +269,18 @@ public class VpnTunnelService extends VpnService {
     startForegroundWithNotification(config);
     storeActiveTunnel(config, remoteUdpForwardingEnabled);
     return OutlinePlugin.ErrorCode.NO_ERROR;
+
+//    try {
+//      vpnTunnel.connectTunnel(proxyConfig.host, proxyConfig.port, proxyConfig.password,
+//          proxyConfig.method, remoteUdpForwardingEnabled);
+//    } catch (Exception e) {
+//      LOG.log(Level.SEVERE, "Failed to connect the tunnel", e);
+//      tearDownActiveTunnel();
+//      return OutlinePlugin.ErrorCode.VPN_START_FAILURE;
+//    }
+//    startForegroundWithNotification(config);
+//    storeActiveTunnel(config, remoteUdpForwardingEnabled);
+//    return OutlinePlugin.ErrorCode.NO_ERROR;
   }
 
   private synchronized OutlinePlugin.ErrorCode stopTunnel(final String tunnelId) {
@@ -262,7 +300,8 @@ public class VpnTunnelService extends VpnService {
 
   private boolean isServerReachable(final String host, final int port) {
     try {
-      Shadowsocks.checkServerReachable(host, port);
+//      Shadowsocks.checkServerReachable(host, port);
+      Tun2xray.checkServerReachable(host, port);
     } catch (Exception e) {
       return false;
     }
@@ -282,6 +321,14 @@ public class VpnTunnelService extends VpnService {
   private void stopVpnTunnel() {
     vpnTunnel.disconnectTunnel();
     vpnTunnel.tearDownVpn();
+  }
+
+  // XRay
+
+  private OutlinePlugin.ErrorCode checkServerConnectivity(final XRayConfig config) {
+
+
+    return OutlinePlugin.ErrorCode.UNEXPECTED;
   }
 
   // Shadowsocks

@@ -15,9 +15,11 @@
 package org.outline;
 
 import org.outline.shadowsocks.ShadowsocksConfig;
+import org.outline.xray.XRayConfig;
 
 parcelable TunnelConfig {
   String id;
   String name;
   ShadowsocksConfig proxy;
+  XRayConfig xray;
 }
