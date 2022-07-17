@@ -260,7 +260,7 @@ public class VpnTunnelService extends VpnService {
         isAutoStart ? tunnelStore.isUdpSupported() : errorCode == OutlinePlugin.ErrorCode.NO_ERROR;
 
     try {
-      vpnTunnel.connectTunnel(xrayConfig.serverAddress, xrayConfig.serverPort)
+      vpnTunnel.connectTunnel(xrayConfig.serverAddress, xrayConfig.serverPort);
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "Failed to connect the tunnel", e);
       tearDownActiveTunnel();

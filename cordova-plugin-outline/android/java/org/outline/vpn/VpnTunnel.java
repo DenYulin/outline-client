@@ -121,7 +121,7 @@ public class VpnTunnel {
   }
 
   public synchronized void connectTunnel(final String serverAddress, int serverPort) throws Exception {
-    LOG.info("Connecting the tunnel.")
+    LOG.info("Connecting the tunnel.");
     if (serverAddress == null || port <= 0 || port > 65535) {
       throw new IllegalArgumentException("Must provide valid xray proxy parameters.");
     }
