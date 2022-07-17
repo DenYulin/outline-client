@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 public class Tun2SocksJni {
   private static final String TUN2SOCKS = "tun2socks";
+  private static final String TUN2XRAY = "tun2xray";
   private static final Logger LOG = Logger.getLogger(TUN2SOCKS);
   // Definitions from badvpn BLog.h
   private static final int BLOG_ERROR = 1;
@@ -69,6 +70,7 @@ public class Tun2SocksJni {
 
   static {
     System.loadLibrary(TUN2SOCKS);
+    System.loadLibrary(TUN2XRAY);
   }
 
   // Converts a BLog level to Java logging level.
