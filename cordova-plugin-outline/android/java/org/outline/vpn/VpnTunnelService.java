@@ -174,7 +174,7 @@ public class VpnTunnelService extends VpnService {
     tunnelConfig.xray.configType = config.getString("configType");
     tunnelConfig.xray.jsonConfig = config.getString("jsonConfig");
     tunnelConfig.xray.serverAddress = config.getString("serverAddress");
-    tunnelConfig.xray.serverPort = config.getString("serverPort");
+    tunnelConfig.xray.serverPort = config.getInt("serverPort");
     tunnelConfig.xray.userId = config.getString("userId");
 
     try {
@@ -195,7 +195,7 @@ public class VpnTunnelService extends VpnService {
   private synchronized OutlinePlugin.ErrorCode startTunnel(
       final TunnelConfig config, boolean isAutoStart) {
     LOG.info(String.format(Locale.ROOT, "Starting tunnel %s.", config.id));
-    if (config.id == null || config.proxy == null || config.xray) {
+    if (config.id == null || config.proxy == null) {
       return OutlinePlugin.ErrorCode.ILLEGAL_SERVER_CONFIGURATION;
     }
     final boolean isRestart = tunnelConfig != null;
@@ -211,8 +211,8 @@ public class VpnTunnelService extends VpnService {
       }
     }
 
-    final XrayConfig xrayConfig = config.xray;
-    OutlinePlugin.ErrorCode errorCodeX = OutlinePlugin.ErrorCode.NO_ERROR;
+    final XRayConfig xrayConfig = config.xray;
+    OutlinePlugin.ErrorCode errorCode = OutlinePlugin.ErrorCode.NO_ERROR;
     if (!isAutoStart) {
       try {
         errorCodeX = checkServerConnectivity(xrayConfig);
@@ -225,7 +225,6 @@ public class VpnTunnelService extends VpnService {
         return OutlinePlugin.ErrorCode.XRAY_START_FAILURE;
       }
     }
-
 
 //    final ShadowsocksConfig proxyConfig = config.proxy;
 //    OutlinePlugin.ErrorCode errorCode = OutlinePlugin.ErrorCode.NO_ERROR;
@@ -260,7 +259,7 @@ public class VpnTunnelService extends VpnService {
         isAutoStart ? tunnelStore.isUdpSupported() : errorCode == OutlinePlugin.ErrorCode.NO_ERROR;
 
     try {
-      vpnTunnel.connectTunnel(xrayConfig.serverAddress, xrayConfig.serverPort);
+      vpnTunnel.connectTunnel(xrayConfig.serverAddress, xrayConfig.serverPort, xrayConfig.userId);
     } catch (Exception e) {
       LOG.log(Level.SEVERE, "Failed to connect the tunnel", e);
       tearDownActiveTunnel();

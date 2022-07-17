@@ -26,8 +26,9 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import tun2socks.OutlineTunnel;
+//import tun2socks.OutlineTunnel;
 //import tun2socks.Tun2socks;
+import tun2xray.OutlineTunnel;
 import tun2xray.Tun2xray;
 
 /**
@@ -120,9 +121,9 @@ public class VpnTunnel {
     }
   }
 
-  public synchronized void connectTunnel(final String serverAddress, int serverPort) throws Exception {
+  public synchronized void connectTunnel(final String serverAddress, int serverPort, userId string) throws Exception {
     LOG.info("Connecting the tunnel.");
-    if (serverAddress == null || port <= 0 || port > 65535) {
+    if (serverAddress == null || serverPort <= 0 || serverPort > 65535) {
       throw new IllegalArgumentException("Must provide valid xray proxy parameters.");
     }
     if (tunFd == null) {
