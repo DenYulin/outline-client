@@ -62,7 +62,7 @@
       src="android/java/org/outline/log"
       target-dir="app/src/main/java/org/outline" />
     <source-file
-      src="android/libs/tun2socks.aar"
+      src="android/libs/tun2xray.aar"
       target-dir="app/src/main/libs" />
     <!-- These are JNI libraries with debug symbols required for crash reporting tools. -->
     <source-file
