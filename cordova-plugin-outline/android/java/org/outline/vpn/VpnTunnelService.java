@@ -42,7 +42,7 @@ import org.outline.log.SentryErrorReporter;
 //import org.outline.shadowsocks.ShadowsocksConfig;
 //import shadowsocks.Shadowsocks;
 import org.outline.xray.XRayConfig;
-import xray.Xray
+import xray.Xray;
 
 /**
  * Android service responsible for managing a VPN tunnel. Clients must bind to this
