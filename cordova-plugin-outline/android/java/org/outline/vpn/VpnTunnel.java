@@ -121,7 +121,7 @@ public class VpnTunnel {
     }
   }
 
-  public synchronized void connectTunnel(final String serverAddress, int serverPort, final String userId) throws Exception {
+  public synchronized void connectTunnel(String serverAddress, int serverPort, String userId) throws Exception {
     LOG.info("Connecting the tunnel.");
     if (serverAddress == null || serverPort <= 0 || serverPort > 65535) {
       throw new IllegalArgumentException("Must provide valid xray proxy parameters.");
@@ -134,7 +134,7 @@ public class VpnTunnel {
     }
 
     LOG.fine("Starting tun2xray...");
-    tunnel = Tun2xray.connectXrayTunnel(tunFd.getFd(), "param", "", serverAddress, serverPort, userId);
+    tunnel = Tun2xray.connectXrayTunnel(tunFd.getFd(), "param", "", serverAddress, serverPort, "userId");
   }
 
   /**
