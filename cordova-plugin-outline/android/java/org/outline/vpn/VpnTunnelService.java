@@ -477,6 +477,12 @@ public class VpnTunnelService extends VpnService {
     JSONObject tunnel = new JSONObject();
     try {
       JSONObject proxyConfig = new JSONObject();
+      proxyConfig.put("serverAddress", config.xray.serverAddress);
+      proxyConfig.put("serverPort", config.xray.serverPort);
+      proxyConfig.put("userId", config.xray.userId);
+      proxyConfig.put("configType", config.xray.configType);
+      proxyConfig.put("jsonConfig", config.xray.jsonConfig);
+
       proxyConfig.put("host", config.proxy.host);
       proxyConfig.put("port", config.proxy.port);
       proxyConfig.put("password", config.proxy.password);
