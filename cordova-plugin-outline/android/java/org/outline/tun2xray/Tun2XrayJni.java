@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 public class TunxXrayJni {
     private static final String TUN2XRAY = "tun2xray";
-    private static final Logger LOG = Logger.getLogger(TUN2SOCKS);
+    private static final Logger LOG = Logger.getLogger(TUN2XRAY);
     // Definitions from badvpn BLog.h
     private static final int BLOG_ERROR = 1;
     private static final int BLOG_WARNING = 2;
