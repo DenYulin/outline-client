@@ -237,7 +237,8 @@ public class VpnTunnel {
   }
 
   private String getUUID() {
-
+    UUID uuid = UUID.randomUUID();
+    return uuid.toString();
   }
 }
 
