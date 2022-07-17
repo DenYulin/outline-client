@@ -27,7 +27,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tun2socks.OutlineTunnel;
-import tun2socks.Tun2socks;
+//import tun2socks.Tun2socks;
 import tun2xray.Tun2xray;
 
 /**
@@ -148,23 +148,23 @@ public class VpnTunnel {
    *     connected.
    * @throws Exception when the tunnel fails to connect.
    */
-  public synchronized void connectTunnel(final String host, int port, final String password,
-      final String cipher, boolean isUdpEnabled) throws Exception {
-    LOG.info("Connecting the tunnel.");
-    if (host == null || port <= 0 || port > 65535 || password == null || cipher == null) {
-      throw new IllegalArgumentException("Must provide valid Shadowsocks proxy parameters.");
-    }
-    if (tunFd == null) {
-      throw new IllegalStateException("Must establish the VPN before connecting the tunnel.");
-    }
-    if (isTunnelConnected()) {
-      throw new IllegalStateException("Tunnel already connected");
-    }
-
-    LOG.fine("Starting tun2socks...");
-    tunnel = Tun2socks.connectShadowsocksTunnel(
-        tunFd.getFd(), host, port, password, cipher, isUdpEnabled);
-  }
+//  public synchronized void connectTunnel(final String host, int port, final String password,
+//      final String cipher, boolean isUdpEnabled) throws Exception {
+//    LOG.info("Connecting the tunnel.");
+//    if (host == null || port <= 0 || port > 65535 || password == null || cipher == null) {
+//      throw new IllegalArgumentException("Must provide valid Shadowsocks proxy parameters.");
+//    }
+//    if (tunFd == null) {
+//      throw new IllegalStateException("Must establish the VPN before connecting the tunnel.");
+//    }
+//    if (isTunnelConnected()) {
+//      throw new IllegalStateException("Tunnel already connected");
+//    }
+//
+//    LOG.fine("Starting tun2socks...");
+//    tunnel = Tun2socks.connectShadowsocksTunnel(
+//        tunFd.getFd(), host, port, password, cipher, isUdpEnabled);
+//  }
 
   /* Disconnects a tunnel created by a previous call to |connectTunnel|. */
   public synchronized void disconnectTunnel() {

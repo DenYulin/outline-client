@@ -84,7 +84,7 @@ struct socks_udp_header {
   uint16_t port;
 };
 
-- (void)isUdpForwardingEnabled:(void (^)(BOOL))completion {
+- (void)`isUdpForwardingEnabled:(void (^)(BOOL))completion {
   DDLogInfo(@"Starting remote UDP forwarding check.");
   self.isRemoteUdpForwardingEnabled = false;
   self.udpForwardingNumChecks = 0;

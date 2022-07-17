@@ -39,8 +39,8 @@ import org.outline.IVpnTunnelService;
 import org.outline.OutlinePlugin;
 import org.outline.TunnelConfig;
 import org.outline.log.SentryErrorReporter;
-import org.outline.shadowsocks.ShadowsocksConfig;
-import shadowsocks.Shadowsocks;
+//import org.outline.shadowsocks.ShadowsocksConfig;
+//import shadowsocks.Shadowsocks;
 import org.outline.xray.XRayConfig;
 import tun2xray.Tun2xray;
 
@@ -164,11 +164,11 @@ public class VpnTunnelService extends VpnService {
     }
     final TunnelConfig tunnelConfig = new TunnelConfig();
     tunnelConfig.id = tunnelId;
-    tunnelConfig.proxy = new ShadowsocksConfig();
-    tunnelConfig.proxy.host = config.getString("host");
-    tunnelConfig.proxy.port = config.getInt("port");
-    tunnelConfig.proxy.password = config.getString("password");
-    tunnelConfig.proxy.method = config.getString("method");
+//    tunnelConfig.proxy = new ShadowsocksConfig();
+//    tunnelConfig.proxy.host = config.getString("host");
+//    tunnelConfig.proxy.port = config.getInt("port");
+//    tunnelConfig.proxy.password = config.getString("password");
+//    tunnelConfig.proxy.method = config.getString("method");
 
     tunnelConfig.xray = new XRayConfig();
     tunnelConfig.xray.configType = config.getString("configType");
@@ -326,17 +326,8 @@ public class VpnTunnelService extends VpnService {
   // XRay
 
   private OutlinePlugin.ErrorCode checkServerConnectivity(final XRayConfig config) {
-
-
-    return OutlinePlugin.ErrorCode.UNEXPECTED;
-  }
-
-  // Shadowsocks
-
-  private OutlinePlugin.ErrorCode checkServerConnectivity(final ShadowsocksConfig config) {
     try {
-      long errorCode = shadowsocks.Shadowsocks.checkConnectivity(
-          config.host, config.port, config.password, config.method);
+      long errorCode = tun2xray.Tun2xray.CheckConnectivity(config.serverAddress, config.serverPort, config.userId);
       OutlinePlugin.ErrorCode result = OutlinePlugin.ErrorCode.values()[(int) errorCode];
       LOG.info(String.format(Locale.ROOT, "Go connectivity check result: %s", result.name()));
       return result;
@@ -345,6 +336,21 @@ public class VpnTunnelService extends VpnService {
     }
     return OutlinePlugin.ErrorCode.UNEXPECTED;
   }
+
+  // Shadowsocks
+
+//  private OutlinePlugin.ErrorCode checkServerConnectivity(final ShadowsocksConfig config) {
+//    try {
+//      long errorCode = shadowsocks.Shadowsocks.checkConnectivity(
+//          config.host, config.port, config.password, config.method);
+//      OutlinePlugin.ErrorCode result = OutlinePlugin.ErrorCode.values()[(int) errorCode];
+//      LOG.info(String.format(Locale.ROOT, "Go connectivity check result: %s", result.name()));
+//      return result;
+//    } catch (Exception e) {
+//      LOG.log(Level.SEVERE, "Connectivity checks failed", e);
+//    }
+//    return OutlinePlugin.ErrorCode.UNEXPECTED;
+//  }
 
   // Connectivity
 
