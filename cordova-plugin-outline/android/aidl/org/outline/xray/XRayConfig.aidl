@@ -1,10 +1,10 @@
 package org.outline.xray;
 
 parcelable XRayConfig {
-    string configType;
-    string jsonConfig;
-    string serverAddress;
+    String configType;
+    String jsonConfig;
+    String serverAddress;
     int serverPort;
-    string userId;
+    String userId;
 }
 
