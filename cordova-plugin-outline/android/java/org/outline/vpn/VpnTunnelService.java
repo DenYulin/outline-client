@@ -326,7 +326,7 @@ public class VpnTunnelService extends VpnService {
 
   private OutlinePlugin.ErrorCode checkServerConnectivity(final XRayConfig config) {
     try {
-      long errorCode = xray.Xray.CheckConnectivity(config.serverAddress, config.serverPort, config.userId);
+      long errorCode = xray.Xray.checkConnectivity(config.serverAddress, config.serverPort, config.userId);
       OutlinePlugin.ErrorCode result = OutlinePlugin.ErrorCode.values()[(int) errorCode];
       LOG.info(String.format(Locale.ROOT, "Go connectivity check result: %s", result.name()));
       return result;
