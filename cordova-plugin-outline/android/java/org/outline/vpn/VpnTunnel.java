@@ -134,7 +134,7 @@ public class VpnTunnel {
     }
 
     LOG.fine("Starting tun2xray...");
-    tunnel = Tun2xray.connectXrayTunnel(tunFd.getFd(), "param", "", serverAddress, serverPort, "userId");
+    tunnel = Tun2xray.connectXrayTunnel(tunFd.getFd(), "param", "", serverAddress, serverPort, userId);
   }
 
   /**
