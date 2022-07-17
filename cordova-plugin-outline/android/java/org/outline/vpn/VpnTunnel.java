@@ -127,7 +127,7 @@ public class VpnTunnel {
       throw new IllegalArgumentException("Must provide valid xray proxy parameters.");
     }
     if (tunFd == null) {
-      throw new IllegalStateException("Must establish the VPN before connecting the tunnel."S);
+      throw new IllegalStateException("Must establish the VPN before connecting the tunnel.");
     }
     if (isTunnelConnected()) {
       throw new IllegalStateException("Tunnel already connected");
