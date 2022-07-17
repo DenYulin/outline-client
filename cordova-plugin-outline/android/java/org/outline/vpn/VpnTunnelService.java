@@ -42,7 +42,7 @@ import org.outline.log.SentryErrorReporter;
 //import org.outline.shadowsocks.ShadowsocksConfig;
 //import shadowsocks.Shadowsocks;
 import org.outline.xray.XRayConfig;
-import tun2xray.Tun2xray;
+import xray.Xray
 
 /**
  * Android service responsible for managing a VPN tunnel. Clients must bind to this
@@ -215,7 +215,7 @@ public class VpnTunnelService extends VpnService {
     OutlinePlugin.ErrorCode errorCode = OutlinePlugin.ErrorCode.NO_ERROR;
     if (!isAutoStart) {
       try {
-        errorCodeX = checkServerConnectivity(xrayConfig);
+        errorCode = checkServerConnectivity(xrayConfig);
         if (!(errorCode == OutlinePlugin.ErrorCode.NO_ERROR || errorCode == OutlinePlugin.ErrorCode.UDP_RELAY_NOT_ENABLED)) {
           tearDownActiveTunnel();
           return errorCode;
@@ -300,7 +300,7 @@ public class VpnTunnelService extends VpnService {
   private boolean isServerReachable(final String host, final int port) {
     try {
 //      Shadowsocks.checkServerReachable(host, port);
-      Tun2xray.checkServerReachable(host, port);
+      Xray.checkServerReachable(host, port);
     } catch (Exception e) {
       return false;
     }
@@ -326,7 +326,7 @@ public class VpnTunnelService extends VpnService {
 
   private OutlinePlugin.ErrorCode checkServerConnectivity(final XRayConfig config) {
     try {
-      long errorCode = tun2xray.Tun2xray.CheckConnectivity(config.serverAddress, config.serverPort, config.userId);
+      long errorCode = xray.Xray.CheckConnectivity(config.serverAddress, config.serverPort, config.userId);
       OutlinePlugin.ErrorCode result = OutlinePlugin.ErrorCode.values()[(int) errorCode];
       LOG.info(String.format(Locale.ROOT, "Go connectivity check result: %s", result.name()));
       return result;

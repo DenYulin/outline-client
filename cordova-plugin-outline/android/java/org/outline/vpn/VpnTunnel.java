@@ -121,13 +121,13 @@ public class VpnTunnel {
     }
   }
 
-  public synchronized void connectTunnel(final String serverAddress, int serverPort, userId string) throws Exception {
+  public synchronized void connectTunnel(final String serverAddress, int serverPort, final String userId) throws Exception {
     LOG.info("Connecting the tunnel.");
     if (serverAddress == null || serverPort <= 0 || serverPort > 65535) {
       throw new IllegalArgumentException("Must provide valid xray proxy parameters.");
     }
     if (tunFd == null) {
-      throw new IllegalStateException("Must establish the VPN before connecting the tunnel.");
+      throw new IllegalStateException("Must establish the VPN before connecting the tunnel."S);
     }
     if (isTunnelConnected()) {
       throw new IllegalStateException("Tunnel already connected");
