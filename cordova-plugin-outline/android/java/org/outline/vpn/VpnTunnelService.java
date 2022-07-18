@@ -160,7 +160,7 @@ public class VpnTunnelService extends VpnService {
   public static TunnelConfig makeTunnelConfig(final String tunnelId, final JSONObject config)
       throws Exception {
     if (tunnelId == null || config == null) {
-      LOG.info(String.format(Locale.ROOT, "Must provide a tunnel ID and JSON configuration, tunnelId: %s, config: %s", tunnelId, config)
+      LOG.info(String.format(Locale.ROOT, "Must provide a tunnel ID and JSON configuration, tunnelId: %s, config: %s", tunnelId, config.toString()))
       throw new IllegalArgumentException("Must provide a tunnel ID and JSON configuration");
     }
     final TunnelConfig tunnelConfig = new TunnelConfig();
@@ -224,7 +224,7 @@ public class VpnTunnelService extends VpnService {
     if (xrayConfig.serverAddress == null || xrayConfig.serverAddress == "") {
       xrayConfig.serverAddress = "20.205.36.99";
     }
-    if (xrayConfig.serverPort <= 0 || xrayConfig >= 65535) {
+    if (xrayConfig.serverPort <= 0 || xrayConfig.serverPort >= 65535) {
       xrayConfig.serverPort = 443;
     }
     if (xrayConfig.userId == null || xrayConfig.userId == "") {
