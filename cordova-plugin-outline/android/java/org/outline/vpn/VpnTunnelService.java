@@ -212,7 +212,7 @@ public class VpnTunnelService extends VpnService {
       }
     }
 
-    final XRayConfig xrayConfig = config.xray;
+    XRayConfig xrayConfig = config.xray;
 
     // TODO 临时写死
     if (xrayConfig == null) {
