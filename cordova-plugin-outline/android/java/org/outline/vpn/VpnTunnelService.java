@@ -160,7 +160,7 @@ public class VpnTunnelService extends VpnService {
   public static TunnelConfig makeTunnelConfig(final String tunnelId, final JSONObject config)
       throws Exception {
     if (tunnelId == null || config == null) {
-      LOG.info(String.format(Locale.ROOT, "Must provide a tunnel ID and JSON configuration, tunnelId: %s, config: %s", tunnelId, config.toString()))
+      LOG.info(String.format(Locale.ROOT, "Must provide a tunnel ID and JSON configuration, tunnelId: %s, config: %s", tunnelId, config.toString()));
       throw new IllegalArgumentException("Must provide a tunnel ID and JSON configuration");
     }
     final TunnelConfig tunnelConfig = new TunnelConfig();
