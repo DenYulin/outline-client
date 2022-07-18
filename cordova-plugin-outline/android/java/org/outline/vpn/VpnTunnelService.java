@@ -172,7 +172,6 @@ public class VpnTunnelService extends VpnService {
 //    tunnelConfig.proxy.method = config.getString("method");
 
     tunnelConfig.xray = new XRayConfig();
-    if ()
     tunnelConfig.xray.configType = config.optString("configType", "param");
     tunnelConfig.xray.jsonConfig = config.optString("jsonConfig", "");
     tunnelConfig.xray.serverAddress = config.optString("serverAddress", "20.205.36.99");
