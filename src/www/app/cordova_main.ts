@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /// <reference types='cordova'/>
-/// <reference path='../types/webintents.d.ts'/>
+/// <reference path='../../types/ambient/webintents.d.ts'/>
 
 import '@babel/polyfill';
 import 'web-animations-js/web-animations-next-lite.min.js';
@@ -98,9 +98,6 @@ class CordovaTunnel implements Tunnel {
   constructor(public id: string) {}
 
   start(config: ShadowsocksConfig) {
-    if (!config) {
-      throw new errors.IllegalServerConfiguration();
-    }
     return pluginExecWithErrorCode<void>('start', this.id, config);
   }
 

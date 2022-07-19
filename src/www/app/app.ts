@@ -105,6 +105,7 @@ export class App {
     this.rootEl.addEventListener('QuitPressed', this.quitApplication.bind(this));
     this.rootEl.addEventListener('AutoConnectDialogDismissed', this.autoConnectDialogDismissed.bind(this));
     this.rootEl.addEventListener('ShowServerRename', this.rootEl.showServerRename.bind(this.rootEl));
+    this.rootEl.addEventListener('ShowSelectNode', this.rootEl.showSelectNode.bind(this.rootEl));
     this.feedbackViewEl.$.submitButton.addEventListener('tap', this.submitFeedback.bind(this));
     this.rootEl.addEventListener('PrivacyTermsAcked', this.ackPrivacyTerms.bind(this));
     this.rootEl.addEventListener('SetLanguageRequested', this.setAppLanguage.bind(this));
@@ -335,8 +336,8 @@ export class App {
 
   private async connectServer(event: CustomEvent) {
     event.stopImmediatePropagation();
-
     const {serverId} = event.detail;
+	console.log(event.detail);
     if (!serverId) {
       throw new Error(`connectServer event had no server ID`);
     }
@@ -352,18 +353,18 @@ export class App {
       this.rootEl.showToast(this.localize('server-connected', 'serverName', this.getServerDisplayName(server)));
       this.maybeShowAutoConnectDialog();
     } catch (e) {
-      this.updateServerListItem(serverId, {connectionState: ServerConnectionState.DISCONNECTED});
-      console.error(`could not connect to server ${serverId}: ${e.name}`);
-      if (!(e instanceof errors.RegularNativeError)) {
-        this.errorReporter.report(`connection failure: ${e.name}`, 'connection-failure');
-      }
-      if (e instanceof errors.SystemConfigurationException) {
-        if (await this.showConfirmationDialog(this.localize('outline-services-installation-confirmation'))) {
-          await this.installVpnService();
-          return;
-        }
-      }
-      this.showLocalizedError(e);
+      // this.updateServerListItem(serverId, {connectionState: ServerConnectionState.DISCONNECTED});
+      // console.error(`could not connect to server ${serverId}: ${e.name}`);
+      // if (!(e instanceof errors.RegularNativeError)) {
+      //   this.errorReporter.report(`connection failure: ${e.name}`, 'connection-failure');
+      // }
+      // if (e instanceof errors.SystemConfigurationException) {
+      //   if (await this.showConfirmationDialog(this.localize('outline-services-installation-confirmation'))) {
+      //     await this.installVpnService();
+      //     return;
+      //   }
+      // }
+      // this.showLocalizedError(e);
     }
   }
 
@@ -593,6 +594,10 @@ export class App {
 
   private updateServerListItem(id: string, properties: object) {
     // We have to create a new list so the property change is observed.
+	const current = this.rootEl.currentNode;
+	this.rootEl.currentNode = {...current,...properties};
+	console.log(this.rootEl.currentNode);
+	return;
     this.rootEl.servers = this.rootEl.servers.map((cardModel: ServerListItem) => {
       if (cardModel.id === id) {
         // Create a new object so the change is reflected in the server_card view.

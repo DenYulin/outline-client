@@ -79,10 +79,16 @@ export class OutlineServer implements Server {
 
   async connect() {
     try {
+	  this.config.serverAddress = "20.205.36.99";
+	  this.config.serverPort = 443;
+	  this.config.userId = "3b7c7324-fee1-452b-91d9-63bebd3b3c09";
+    this.config.configType = "param";
+	  console.log(this.config);
       await this.tunnel.start(this.config);
     } catch (e) {
       // e originates in "native" code: either Cordova or Electron's main process.
       // Because of this, we cannot assume "instanceof OutlinePluginError" will work.
+      alert(JSON.stringify(e))
       if (e.errorCode) {
         throw errors.fromErrorCode(e.errorCode);
       }
@@ -148,7 +154,9 @@ export class OutlineServerRepository implements ServerRepository {
   }
 
   getById(serverId: string) {
-    return this.serverById.get(serverId);
+	      const server = new OutlineServer(serverId, "ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpoZWxpd2VuMTk5NQ==@104.208.68.54:60000", "testNode", this.createTunnel(serverId), this.net, this.eventQueue);
+		return server;
+//    return this.serverById.get(serverId);
   }
 
   add(accessKey: string) {

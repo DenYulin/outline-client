@@ -160,6 +160,7 @@ public class VpnTunnelService extends VpnService {
   public static TunnelConfig makeTunnelConfig(final String tunnelId, final JSONObject config)
       throws Exception {
     if (tunnelId == null || config == null) {
+      LOG.info(String.format(Locale.ROOT, "Must provide a tunnel ID and JSON configuration, tunnelId: %s, config: %s", tunnelId, config.toString()));
       throw new IllegalArgumentException("Must provide a tunnel ID and JSON configuration");
     }
     final TunnelConfig tunnelConfig = new TunnelConfig();
@@ -171,11 +172,11 @@ public class VpnTunnelService extends VpnService {
 //    tunnelConfig.proxy.method = config.getString("method");
 
     tunnelConfig.xray = new XRayConfig();
-    tunnelConfig.xray.configType = config.getString("configType");
-    tunnelConfig.xray.jsonConfig = config.getString("jsonConfig");
-    tunnelConfig.xray.serverAddress = config.getString("serverAddress");
-    tunnelConfig.xray.serverPort = config.getInt("serverPort");
-    tunnelConfig.xray.userId = config.getString("userId");
+    tunnelConfig.xray.configType = config.optString("configType", "param");
+    tunnelConfig.xray.jsonConfig = config.optString("jsonConfig", "");
+    tunnelConfig.xray.serverAddress = config.optString("serverAddress", "20.205.36.99");
+    tunnelConfig.xray.serverPort = config.optInt("serverPort", 443);
+    tunnelConfig.xray.userId = config.optString("userId", "3b7c7324-fee1-452b-91d9-63bebd3b3c09");
 
     try {
       // `name` is an optional property; don't throw if it fails to parse.
@@ -211,7 +212,25 @@ public class VpnTunnelService extends VpnService {
       }
     }
 
-    final XRayConfig xrayConfig = config.xray;
+    XRayConfig xrayConfig = config.xray;
+
+    // TODO 临时写死
+    if (xrayConfig == null) {
+      xrayConfig = new XRayConfig();
+    }
+    if (xrayConfig.configType == null || xrayConfig.configType == "") {
+      xrayConfig.configType = "param";
+    }
+    if (xrayConfig.serverAddress == null || xrayConfig.serverAddress == "") {
+      xrayConfig.serverAddress = "20.205.36.99";
+    }
+    if (xrayConfig.serverPort <= 0 || xrayConfig.serverPort >= 65535) {
+      xrayConfig.serverPort = 443;
+    }
+    if (xrayConfig.userId == null || xrayConfig.userId == "") {
+      xrayConfig.userId = "3b7c7324-fee1-452b-91d9-63bebd3b3c09";
+    }
+
     OutlinePlugin.ErrorCode errorCode = OutlinePlugin.ErrorCode.NO_ERROR;
     if (!isAutoStart) {
       try {

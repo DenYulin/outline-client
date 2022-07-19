@@ -29,22 +29,22 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 
 #line 1 "cgo-generated-wrapper"
 
-#line 8 "go_shadowsocksmain.go"
+#line 8 "go_tun2xraymain.go"
 
 #include <stdlib.h>
 #include <stdint.h>
 #include "seq.h"
-#include "shadowsocks.h"
+#include "tun2xray.h"
 
 
 #line 1 "cgo-generated-wrapper"
 
-#line 8 "go_tun2socksmain.go"
+#line 8 "go_xraymain.go"
 
 #include <stdlib.h>
 #include <stdint.h>
 #include "seq.h"
-#include "tun2socks.h"
+#include "xray.h"
 
 
 #line 1 "cgo-generated-wrapper"
@@ -117,30 +117,83 @@ extern "C" {
 
 extern nstring proxy_error_Error(int32_t refnum);
 
-/* Return type for proxyshadowsocks__CheckConnectivity */
-struct proxyshadowsocks__CheckConnectivity_return {
-	nint r0;
-	int32_t r1;
-};
-extern struct proxyshadowsocks__CheckConnectivity_return proxyshadowsocks__CheckConnectivity(nstring param_host, nint param_port, nstring param_password, nstring param_cipher);
-extern int32_t proxyshadowsocks__CheckServerReachable(nstring param_host, nint param_port);
-extern void proxytun2socks_OutlineTunnel_Disconnect(int32_t refnum);
-extern char proxytun2socks_OutlineTunnel_IsConnected(int32_t refnum);
-extern char proxytun2socks_OutlineTunnel_UpdateUDPSupport(int32_t refnum);
-
-/* Return type for proxytun2socks_OutlineTunnel_Write */
-struct proxytun2socks_OutlineTunnel_Write_return {
-	nint r0;
-	int32_t r1;
-};
-extern struct proxytun2socks_OutlineTunnel_Write_return proxytun2socks_OutlineTunnel_Write(int32_t refnum, nbyteslice param_data);
-
-/* Return type for proxytun2socks__ConnectShadowsocksTunnel */
-struct proxytun2socks__ConnectShadowsocksTunnel_return {
+/* Return type for proxytun2xray__ConnectXrayTunnel */
+struct proxytun2xray__ConnectXrayTunnel_return {
 	int32_t r0;
 	int32_t r1;
 };
-extern struct proxytun2socks__ConnectShadowsocksTunnel_return proxytun2socks__ConnectShadowsocksTunnel(nint param_fd, nstring param_host, nint param_port, nstring param_password, nstring param_cipher, char param_isUDPEnabled);
+extern struct proxytun2xray__ConnectXrayTunnel_return proxytun2xray__ConnectXrayTunnel(nint param_fd, nstring param_configType, nstring param_jsonConfig, nstring param_serverAddress, nint param_serverPort, nstring param_userId);
+extern int32_t new_xray_Args();
+extern void proxyxray_Profile_Host_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_Host_Get(int32_t refnum);
+extern void proxyxray_Profile_Path_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_Path_Get(int32_t refnum);
+extern void proxyxray_Profile_TLS_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_TLS_Get(int32_t refnum);
+extern void proxyxray_Profile_Address_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_Address_Get(int32_t refnum);
+extern void proxyxray_Profile_Net_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_Net_Get(int32_t refnum);
+extern void proxyxray_Profile_ID_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_ID_Get(int32_t refnum);
+extern void proxyxray_Profile_Flow_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_Flow_Get(int32_t refnum);
+extern void proxyxray_Profile_Type_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_Type_Get(int32_t refnum);
+extern void proxyxray_Profile_OutboundProtocol_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_OutboundProtocol_Get(int32_t refnum);
+extern void proxyxray_Profile_UseIPv6_Set(int32_t refnum, char v);
+extern char proxyxray_Profile_UseIPv6_Get(int32_t refnum);
+extern void proxyxray_Profile_LogLevel_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_LogLevel_Get(int32_t refnum);
+extern void proxyxray_Profile_RouteMode_Set(int32_t refnum, nint v);
+extern nint proxyxray_Profile_RouteMode_Get(int32_t refnum);
+extern void proxyxray_Profile_DNS_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_DNS_Get(int32_t refnum);
+extern void proxyxray_Profile_AllowInsecure_Set(int32_t refnum, char v);
+extern char proxyxray_Profile_AllowInsecure_Get(int32_t refnum);
+extern void proxyxray_Profile_Mux_Set(int32_t refnum, nint v);
+extern nint proxyxray_Profile_Mux_Get(int32_t refnum);
+extern void proxyxray_Profile_AssetPath_Set(int32_t refnum, nstring v);
+extern nstring proxyxray_Profile_AssetPath_Get(int32_t refnum);
+extern nstring proxyxray_Profile_String(int32_t refnum);
+extern int32_t new_xray_Profile();
+extern void proxyxray_OutlineTunnel_Disconnect(int32_t refnum);
+extern char proxyxray_OutlineTunnel_IsConnected(int32_t refnum);
+extern char proxyxray_OutlineTunnel_UpdateUDPSupport(int32_t refnum);
+
+/* Return type for proxyxray_OutlineTunnel_Write */
+struct proxyxray_OutlineTunnel_Write_return {
+	nint r0;
+	int32_t r1;
+};
+extern struct proxyxray_OutlineTunnel_Write_return proxyxray_OutlineTunnel_Write(int32_t refnum, nbyteslice param_data);
+extern int32_t proxyxray_TunWriter_Close(int32_t refnum);
+
+/* Return type for proxyxray_TunWriter_Write */
+struct proxyxray_TunWriter_Write_return {
+	nint r0;
+	int32_t r1;
+};
+extern struct proxyxray_TunWriter_Write_return proxyxray_TunWriter_Write(int32_t refnum, nbyteslice param_p0);
+
+/* Return type for proxyxray__CheckConnectivity */
+struct proxyxray__CheckConnectivity_return {
+	nint r0;
+	int32_t r1;
+};
+extern struct proxyxray__CheckConnectivity_return proxyxray__CheckConnectivity(nstring param_serverAddress, nint param_serverPort, nstring param_userId);
+extern int32_t proxyxray__CheckServerReachable(nstring param_host, nint param_port);
+
+/* Return type for proxyxray__CreateOutlineTunnel */
+struct proxyxray__CreateOutlineTunnel_return {
+	int32_t r0;
+	int32_t r1;
+};
+extern struct proxyxray__CreateOutlineTunnel_return proxyxray__CreateOutlineTunnel(int32_t param_tun, nstring param_configType, nstring param_jsonConfig, nstring param_serverAddress, nint param_serverPort, nstring param_userId);
+
+// skipped function CreateXrayClient with unsupported parameter or result types
+extern char proxyxray__FileExists(nstring param_file);
 
 // IncGoRef is called by foreign code to pin a Go object while its refnum is crossing
 // the language barrier

@@ -14,9 +14,20 @@
 
 // Represents a Shadowsocks proxy server configuration.
 export interface ShadowsocksConfig {
+  serverAddress?: string;
+  serverPort?: number;
+  userId?:string;
+  configType?:string;
   host?: string;
   port?: number;
   password?: string;
   method?: string;
   name?: string;
+}
+
+export interface XrayConfig{
+	serverAddress?: string;
+	serverPort?: number;
+	userId?:string;
+  configFormat?:string;
 }

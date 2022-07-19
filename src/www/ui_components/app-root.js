@@ -36,9 +36,15 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-item/paper-icon-item.js';
 import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-toast/paper-toast.js';
+import '@polymer/paper-spinner/paper-spinner.js';
 import 'outline-i18n/index.js';
 import './about-view.js';
+import './changenode-view.js';
 import './add-server-view.js';
+import './buypackage-view.js';
+import './mystate-view.js';
+import './login-view.js';
+import './register-view.js';
 import './feedback-view.js';
 import './language-view.js';
 import './licenses-view.js';
@@ -47,12 +53,17 @@ import './privacy-view.js';
 import '../views/servers_view';
 import './server-rename-dialog.js';
 import './user-comms-dialog.js';
+import './server-view.js';
+import './splash-view.js';
 
 import {AppLocalizeBehavior} from '@polymer/app-localize-behavior/app-localize-behavior.js';
 import {PaperMenuButton} from '@polymer/paper-menu-button/paper-menu-button.js';
 import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
 import {html} from '@polymer/polymer/lib/utils/html-tag.js';
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
+
+import {ServerListItem, ServerConnectionState} from '../views/servers_view';
+
 
 // Workaround:
 // https://github.com/PolymerElements/paper-menu-button/issues/101#issuecomment-297856912
@@ -72,7 +83,6 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
           --app-drawer-width: 280px;
           display: flex;
           flex-direction: column;
-          font-family: var(--outline-font-family);
         }
 
         app-header {
@@ -108,6 +118,18 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
           flex: 1;
           min-width: 40px;
         }
+
+        #alert{
+          padding:10px;
+          word-break:break-all;
+        }
+        .tishi_text{background:#f5f5f5;padding:10px;margin-top:20px;}
+        .tishi_mar{margin-top:30px;}
+        #alert h2, #alert paper-dialog-scrollable{
+          margin:0px;
+          padding:5px 0;
+        }
+        #alert h2{}
 
         iron-pages {
           display: flex;
@@ -270,8 +292,60 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
           </app-toolbar>
         </app-header>
 
-        <iron-pages id="pages" selected="[[page]]" attr-for-selected="name">
-          <servers-view name="servers" id="serversView" servers="[[servers]]" localize="[[localize]]"></servers-view>
+        <iron-pages id="pages" selected="[[page]]" attr-for-selected="name" on-iron-select="_pageSelected" on-iron-deselect="_pageDeselected">
+        <splash-view name="splash" id="splashView" bg-image="[[]]"
+				localize="[[localize]]"
+				get-nonce-str="[[getNonceStr]]"
+				api-domain="[[apiDomain]]"
+				client="[[client]]"
+				public-key="[[publicKey]]"
+				access-token="[[accessToken]]"			
+				root-path="[[rootPath]]"				
+			></splash-view>
+        <server-view name="server" id="serverView" servers="[[servers]]"
+        get-nonce-str="[[getNonceStr]]"
+        api-domain="[[apiDomain]]"
+        current-node="{{currentNode}}"
+        client="[[client]]"
+        public-key="[[publicKey]]"
+        access-token="[[accessToken]]"
+        current="{{currentServer}}" localize="[[localize]]"></server-view>
+          <servers-view name="servers" id="serversView" servers="[[servers]]" current="{{currentServer}}" localize="[[localize]]"></servers-view>
+          <buypackage-view name="buypackage" id="buypackageView"
+          get-nonce-str="[[getNonceStr]]"
+          api-domain="[[apiDomain]]"
+          client="[[client]]"
+          public-key="[[publicKey]]"
+          access-token="[[accessToken]]"
+          localize="[[localize]]"></buypackage-view>
+          <changenode-view name="changenode" id="changenodeView" 
+          get-nonce-str="[[getNonceStr]]"
+          api-domain="[[apiDomain]]"
+          current-node="{{currentNode}}"
+          client="[[client]]"
+          public-key="[[publicKey]]"
+          access-token="[[accessToken]]"
+          localize="[[localize]]"></changenode-view>
+          <mystate-view name="mystate" id="mystateView"
+          get-nonce-str="[[getNonceStr]]"
+          api-domain="[[apiDomain]]"
+          client="[[client]]"
+          public-key="[[publicKey]]"
+          access-token="[[accessToken]]"
+          localize="[[localize]]"></mystate-view>
+          <login-view name="login" id="loginView" localize="[[localize]]" 
+		  		get-nonce-str="[[getNonceStr]]"
+				api-domain="[[apiDomain]]"
+				client="[[client]]"
+				public-key="[[publicKey]]"
+				access-token="[[accessToken]]"
+		  ></login-view>
+          <register-view name="register" id="registerView" 
+          get-nonce-str="[[getNonceStr]]"
+          api-domain="[[apiDomain]]"
+          client="[[client]]"
+          public-key="[[publicKey]]"
+          localize="[[localize]]"></register-view>
           <feedback-view name="feedback" id="feedbackView" localize="[[localize]]"></feedback-view>
           <about-view
             name="about"
@@ -343,22 +417,42 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
               <iron-icon icon="outline-icons:outline" slot="item-icon"></iron-icon>
               <span class="item-label">[[localize('servers-menu-item')]]</span>
             </paper-icon-item>
-            <paper-icon-item name="feedback">
-              <iron-icon id="feedback-icon" icon="feedback" slot="item-icon"></iron-icon>
-              [[localize('feedback-page-title')]]
+            <paper-icon-item name="buypackage">
+              <iron-icon id="store-icon" icon="store" slot="item-icon"></iron-icon>
+              [[localize('buy-package')]]
             </paper-icon-item>
-            <paper-icon-item name="about">
-              <iron-icon icon="info" slot="item-icon"></iron-icon>
-              [[localize('about-page-title')]]
+            <paper-icon-item name="mystate">
+              <iron-icon icon="settings" slot="item-icon"></iron-icon>
+              [[localize('my-state')]]
             </paper-icon-item>
             <paper-icon-item name="help">
               <a href="https://s3.amazonaws.com/outline-vpn/index.html#/support" id="helpAnchor" hidden=""></a>
               <iron-icon icon="help" slot="item-icon"></iron-icon>
               [[localize('help-page-title')]]
             </paper-icon-item>
-            <paper-icon-item name="language" class$="[[_computeIsLastVisibleMenuItem(shouldShowQuitButton)]]">
+            <paper-icon-item name="language">
               <iron-icon icon="language" slot="item-icon"></iron-icon>
               [[localize('change-language-page-title')]]
+            </paper-icon-item>
+            <paper-icon-item name="changenode">
+            <iron-icon icon="exit-to-app" slot="item-icon"></iron-icon>
+           节点列表
+            </paper-icon-item>
+            <paper-icon-item name="login">
+            <iron-icon icon="exit-to-app" slot="item-icon"></iron-icon>
+           登录
+            </paper-icon-item>
+            <paper-icon-item name="register">
+            <iron-icon icon="exit-to-app" slot="item-icon"></iron-icon>
+           注册
+            </paper-icon-item>
+            <paper-icon-item name="servers">
+            <iron-icon icon="exit-to-app" slot="item-icon"></iron-icon>
+           服务器连接
+            </paper-icon-item>
+            <paper-icon-item name="loginexit"  class$="[[_computeIsLastVisibleMenuItem(shouldShowQuitButton)]]">
+            <iron-icon icon="exit-to-app" slot="item-icon"></iron-icon>
+            [[localize('login-exit')]]
             </paper-icon-item>
             <paper-icon-item name="quit" class="last-menu-item" hidden$="[[!shouldShowQuitButton]]">
               <iron-icon icon="cancel" slot="item-icon"></iron-icon>
@@ -388,7 +482,19 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
         <paper-button id="toastButton" on-tap="_callToastHandler"></paper-button>
         <a hidden="" id="toastUrl" href="[[toastUrl]]"></a>
       </paper-toast>
-
+      <paper-dialog id="loading" modal>
+      <paper-spinner active></paper-spinner>
+       </paper-dialog>
+       <paper-dialog id="alert" modal>
+		<h2 id="alertTitle">Header</h2>
+		  <paper-dialog-scrollable>
+			<div id="alertText">content</div>
+		  </paper-dialog-scrollable>
+		  <div class="buttons">
+			<paper-button id="alertCancelButton" on-tap="_callAlertCancelHandler">Cancel</paper-button>
+			<paper-button id="alertOkButton" on-tap="_callAlertOKHandler">OK</paper-button>
+		  </div>
+	   </paper-dialog>
       <add-server-view id="addServerView" localize="[[localize]]"></add-server-view>
 
       <!-- Modal dialogs must be placed outside of app-header-layout, see
@@ -412,7 +518,7 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
       DEFAULT_PAGE: {
         type: String,
         readonly: true,
-        value: 'servers',
+        value: 'server',
       },
       DEFAULT_LANGUAGE: {
         type: String,
@@ -516,6 +622,50 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
       servers: {
         type: Array,
       },
+      currentServer:{
+        type:String,
+        value:"abc"
+      },//
+	  apiDomain:{//sffshh 接口域名，省得以后更新要多处替换
+		type:String,
+		value: "https://api.dogejet.xyz"
+	  },
+	  accessToken:{//sffshh 当前登录Token
+		type: String,
+		computed:'_computeAccessToken()'
+	  },
+	  platformIndex:{//当前平台Index
+		  type: Number,
+		  value: 0
+	  },
+	  clients:{//平台列表
+		  type:Array,
+		  value: ["windows","android","mac","ios"]
+	  },
+	  client:{//当前平台
+		  type:String,
+		  computed: '_computeClient()',
+	  },
+	  publicKeys:{//平台对应公钥列表
+		  type:Array,
+		  value:["MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzkm2P9KqADtQJZnJCd2YCe2LU1cIeTxDfC3HtqCGY21RMVlB80XZRkPKaEMBj7G9haSWet3PXVOgVrTrhMjISVhk6ly1Y4JxfR7QtG3+icHp57tFTRA9egak5TXbdSBtFzmnmCchP1pUmcNuhevFu9wqdtFMB/5fS4c/kQPqQqy5CNU/K28e4YFWMSq7zgzlUnBLv3yjbGQnc3PLqBpr2pjKUaTpqKyNmgoAFwGeDf84T3nnWVacNWfUhJqnrYIm3Uv9HEny048bIlRjRQf0+cs77ocKYqOiWz/g06sDsx7+qPboCWG8OykUc/JxyR7LogdwND+9uvFC3PXU4EPZ0QIDAQAB","","",""]
+	  },
+	  publicKey:{//当前公钥
+		  type:String,
+		  computed: '_computePublicKey()',
+	  },
+    currentNode:{
+		type:Object,
+		value:{connectionState: ServerConnectionState.DISCONNECTED}
+	},//当前节点
+    splashPic:{
+      type:String,
+      value:''
+    },
+    enableVerifyEmail:{
+      type:Boolean,
+      value:false
+    },
       // Tells AppLocalizeBehavior to bubble its
       // app-localize-resources-loaded event, allowing us listen for it on
       // document rather than the (potentially to-be-created) <app-root>
@@ -612,7 +762,14 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
   closeDrawer() {
     this.$.drawer.close();
   }
-
+  showLoading()
+  {
+   this.$.loading.open();
+  }
+  hideLoading()
+  {
+   this.$.loading.close();
+  }
   showToast(text, duration, buttonText, buttonHandler, buttonUrl) {
     // If the toast is already open, first close it. We then always wait a
     // little before calling open in a this.async call. This ensures that:
@@ -652,6 +809,82 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
       this.$.toast.open();
     }, 350);
   }
+  
+  /**
+   * 
+   * @param {标题} title 
+   * @param {内容} content 
+   * @param {按钮一文字} okButtonText 
+   * @param {按钮一调用} okButtonHandler 
+   * @param {按钮二文字} cancelButtonText 
+   * @param {按钮二调用} cancelButtonHandler 
+   */
+  showAlert(title,content, okButtonText, okButtonHandler, cancelButtonText, cancelButtonHandler){
+	  this.async(function(){
+		  this.$.alertTitle.innerText = title;
+		  this.$.alertText.innerHTML = content;
+		  var okButton = this.$.alertOkButton;
+		  if (okButtonText){
+			okButton.hidden = false;
+			okButton.innerText = okButtonText;
+			if (okButtonHandler){
+				okButton._handler = okButtonHandler;
+			}else{
+				okButton._handler = function(){
+					this.$.alert.close();
+				}.bind(this);
+			}
+		  }else{
+			  okButton.hidden = true;
+		  }
+		  var cancelButton = this.$.alertCancelButton;
+		  if (cancelButtonText){
+			cancelButton.hidden = false;
+			cancelButton.innerText = cancelButtonText;
+			if (cancelButtonHandler){
+				cancelButton._handler = cancelButtonHandler;
+			}else{
+				cancelButton._handler = function(){
+					this.$.alert.close();
+				}.bind(this);
+			}
+		  }else{
+			  cancelButton.hidden = true;
+		  }
+		  
+		  this.$.alert.open();
+	  },350);
+  }
+  
+  _callAlertOKHandler() {
+    var okButton = this.$.alertOkButton;
+    var handler = okButton._handler;
+    if (!handler) return console.error('No toast handler found');
+    this.$.alert.close();
+    delete okButton._handler;
+    handler();
+  }
+  _callAlertCancelHandler() {
+    var cancelButton = this.$.alertCancelButton;
+    var handler = cancelButton._handler;
+    if (!handler) return console.error('No toast handler found');
+    this.$.alert.close();
+    delete cancelButton._handler;
+    handler();
+  }
+
+  _pageSelected(event){
+    var page = event.detail.item;
+    var _name = page.tagName.toLocaleUpperCase();
+    var pageNames = "SPLASH-VIEW|LOGIN-VIEW|CHANGENODE-VIEW|SERVER-VIEW";
+    if (pageNames.indexOf(_name)>=0)
+    {
+     page.show();
+    }
+   }
+   
+   _pageDeselected(event){
+   }
 
   changePage(page) {
     if (this.page === page) {
@@ -744,7 +977,39 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
       this.$.helpAnchor.click();
     }
   }
-
+  //sffshh 生成随机字符串
+  getNonceStr(len){
+	  len = len || 8;
+	  var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	  var maxPos = $chars.length;
+	  var pwd = '';
+	  for (var i = 0; i < len; i++) {
+	　　pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+	　}
+	　return pwd;	  
+  }
+  //sffshh 取AccessToken
+  _computeAccessToken(){
+    //return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NTc1Njc0MzEsImlhdCI6MTY1NzI2NzQzMSwidXNlcklEIjoiMTAwNDYifQ.Ski_l9U6lJHZHGD63HKmjh2CSiAY8M0PwtAbssve-SY";
+    var _token = window.localStorage.getItem('accessToken');
+    if (_token)
+      return _token;
+    else
+      return "";
+  }
+  //sffshh 
+  saveAccessToken(_token){
+    window.localStorage.setItem('accessToken',_token);
+  }
+  //sffshh 取当前平台
+  _computeClient(){
+	  return this.clients[this.platformIndex];
+  }
+  
+  //sffshh 取当前公钥
+  _computePublicKey(){
+	  return this.publicKeys[this.platformIndex];
+  }
   _computeShouldShowQuitButton(platform) {
     return platform === 'osx' || platform === 'Electron';
   }
@@ -755,6 +1020,9 @@ export class AppRoot extends mixinBehaviors([AppLocalizeBehavior], PolymerElemen
 
   showServerRename(event) {
     this.$.serverRenameDialog.open(event.detail.name, event.detail.serverId);
+  }
+  showSelectNode(event) {
+    this.changePage("changenode");
   }
 
   _computeShouldShowAppLogo(page) {

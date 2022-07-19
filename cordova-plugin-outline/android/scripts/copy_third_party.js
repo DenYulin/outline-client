@@ -20,6 +20,8 @@ module.exports = function(context) {
   console.log('Copying Android third party libraries...');
   child_process.execSync('mkdir -p plugins/cordova-plugin-outline/android/libs');
   child_process.execSync(
+      `cp third_party/outline-go-tun2socks/android/tun2xray.aar plugins/cordova-plugin-outline/android/libs/`);
+  child_process.execSync(
       `cp third_party/outline-go-tun2socks/android/tun2socks.aar plugins/cordova-plugin-outline/android/libs/`);
   child_process.execSync(
       `cp -R third_party/outline-go-tun2socks/android/jni plugins/cordova-plugin-outline/android/libs/obj`);

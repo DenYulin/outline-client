@@ -28,7 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 //import tun2socks.OutlineTunnel;
 //import tun2socks.Tun2socks;
-import tun2xray.OutlineTunnel;
+import xray.OutlineTunnel;
 import tun2xray.Tun2xray;
 
 /**
