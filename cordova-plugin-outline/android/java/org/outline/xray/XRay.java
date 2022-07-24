@@ -11,6 +11,10 @@ public class XRay {
         return true
     }
 
+    public synchronized void stop() {
+        stopXrayProcess();
+    }
+
     private void stopXrayProcess() {
 
     }
