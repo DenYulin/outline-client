@@ -64,6 +64,12 @@
     <source-file
       src="android/libs/tun2xray.aar"
       target-dir="app/src/main/libs" />
+    <source-file
+      src="android/router/geoip.dat"
+      target-dir="app/src/main/libs"/>
+    <source-file
+      src="android/router/geosite.dat"
+      target-dir="app/src/main/libs"/>
     <!-- These are JNI libraries with debug symbols required for crash reporting tools. -->
     <source-file
       src="android/libs/obj"
