@@ -134,7 +134,8 @@ public class VpnTunnel {
     }
 
     LOG.fine("Starting tun2xray...");
-    tunnel = Tun2xray.connectXrayTunnel(tunFd.getFd(), "param", "", serverAddress, serverPort, userId);
+//    tunnel = Tun2xray.connectXrayTunnel(tunFd.getFd(), "param", "", serverAddress, serverPort, userId);
+    tunnel = Tun2xray.connectXrayTunnel(tunFd.getFd(), "json", getConfigJson(), serverAddress, serverPort, userId);
   }
 
   /**
@@ -239,6 +240,19 @@ public class VpnTunnel {
   private String getUUID() {
     UUID uuid = UUID.randomUUID();
     return uuid.toString();
+  }
+
+  private String getConfigJson() {
+    String config = "/storage/emulated/0/config.json";
+    BufferedReader in = new BufferedReader(new FileReader(config));
+    String str;
+    StringBuffer sb = new StringBuffer();
+    while ((str = in.readLine()) != null) {
+      sb.append(str);
+    }
+
+    String json = sb.toString();
+    return json
   }
 }
 

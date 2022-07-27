@@ -1,0 +1,45 @@
+{
+  "log": {
+    "loglevel": "warning",
+    "access": "/storage/emulated/0/access.log",
+    "error": "/storage/emulated/0/error.log"
+  },
+  "inbounds": [
+    {
+      "port": 10800,
+      "listen": "127.0.0.1",
+      "protocol": "socks",
+      "settings": {
+        "udp": true
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "1eu.1piggy.com",
+            "port": 443,
+            "users": [
+              {
+                "id": "3b7c7324-fee1-452b-91d9-63bebd3b3c09",
+                "flow": "xtls-rprx-direct",
+                "encryption": "none",
+                "level": 0
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+          "serverName": "1eu.1piggy.com"
+        }
+      }
+    }
+  ]
+}
